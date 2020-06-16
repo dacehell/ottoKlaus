@@ -2,33 +2,48 @@
        <div class="text-center">
     <v-dialog
       :value ='showForm'
-      width="500">
+      width="500"
+      persistent
+      >
 
-      <v-card>
-        <v-card-title
-          class="headline grey lighten-2"
-          primary-title
-        >
-          Privacy Policy
-        </v-card-title>
+      <v-container>
 
-        <v-card-text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </v-card-text>
+          <v-row>
+              <v-col>
+                  <v-card class='px-4 pt-4'>
+                    <v-card-title
+                    class="headline grey lighten-2 mb-4"
+                    primary-title
+                    >
+                    Add Toy
+                    </v-card-title>
+                        <v-text-field label="nombre" type="text" :value='currentToy.data.name' @input="updateName" outlined/>
+        
+                <v-text-field label="precio" prefix='$' :value='currentToy.data.price' @input="updatePrice" outlined/>
 
-        <v-divider></v-divider>
+                <v-text-field label="codigo" type="text" :value='currentToy.data.code' @input="updateCode" outlined/>
+        
+                <v-text-field label="stock" suffix="unidades" :value='currentToy.data.stock' @input="updateStock" outlined/>    
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            text
-            @click="submitForm"
-          >
-            I accept
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+                    <v-divider></v-divider>
+
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                <v-btn
+                color="primary"
+                @click="submitForm"
+                >
+                {{ !!currentToy.id ? 'Actualizar' : 'Crear' }}
+                </v-btn>
+                <v-btn @click="hideToyForm">Close</v-btn>
+                </v-card-actions>
+                </v-card>
+              </v-col>
+          </v-row>
+
+    </v-container>
+
+      
     </v-dialog>
   </div>
 </template>
@@ -39,13 +54,19 @@
 import {mapState, mapActions} from 'vuex'    
 export default{
     methods: { 
-        ...mapActions(['hideToyForm']),
+        ...mapActions(['hideToyForm', 'updateName', 'updatePrice','updateCode', 'updateStock', 'postToy', 'updateToy']),
         submitForm() {
+            if(this.currentToy.id) {
+                //si tiene id llama a la funcion que actualiza los datos
+                this.updateToy(this.currentToy.id)
+            } else {
+                this.postToy()
+            }
             this.hideToyForm()
         }
     },
     computed: {
-        ...mapState(['showForm'])
+        ...mapState(['showForm','currentToy'])
     }
 }
  
