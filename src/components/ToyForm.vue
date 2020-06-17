@@ -2,7 +2,7 @@
        <div class="text-center">
     <v-dialog
       :value ='showForm'
-      width="500"
+      width="800"
       persistent
       >
 
@@ -35,7 +35,7 @@
                 >
                 {{ !!currentToy.id ? 'Actualizar' : 'Crear' }}
                 </v-btn>
-                <v-btn @click="hideToyForm">Close</v-btn>
+                <v-btn @click="cancelForm">Close</v-btn>
                 </v-card-actions>
                 </v-card>
               </v-col>
@@ -54,7 +54,7 @@
 import {mapState, mapActions} from 'vuex'    
 export default{
     methods: { 
-        ...mapActions(['hideToyForm', 'updateName', 'updatePrice','updateCode', 'updateStock', 'postToy', 'updateToy']),
+        ...mapActions(['hideToyForm', 'updateName', 'updatePrice','updateCode', 'updateStock', 'postToy', 'updateToy', 'cancelForm']),
         submitForm() {
             if(this.currentToy.id) {
                 //si tiene id llama a la funcion que actualiza los datos

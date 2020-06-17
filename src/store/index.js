@@ -5,14 +5,18 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
-const emptyToy = {
-                  id: null,
-                  data: {
-                    name: '',
-                    price: 0,
-                    code: '',
-                    stock: 0
-                    }
+function emptyToy()  {
+  return{
+    id: null,
+      data: {
+      name: '',
+      price: 0,
+      code: '',
+      stock: 0
+      }
+
+  }
+                
                   }
 
 export default new Vuex.Store({
@@ -20,7 +24,7 @@ export default new Vuex.Store({
     toys: [],
     showForm: false,
     //deleteProduct: {},
-    currentToy: emptyToy,
+    currentToy: emptyToy(),
     overlay: false
   },
   mutations: {
@@ -34,10 +38,11 @@ export default new Vuex.Store({
     SET_CURRENT_TOY(state, toy){state.currentToy = toy},
     DISPLAY_OVERLAY(state) {state.overlay = true},
     HIDE_OVERLAY(state) {state.overlay = false},
-    SET_EMPTY_TOY (state) {
-      state.currentToy.id = null
-      Object.keys(emptyToy.data).forEach(key => {
-        state.currentToy.data[key] = emptyToy.data[key]
+    SET_EMPTY_TOY(state) {
+      state.currentToy.id = null;
+      const empty = emptyToy()
+      Object.keys(empty.data).forEach(key => {
+        state.currentToy.data[key] = empty.data[key]
       })
     },
 
@@ -61,18 +66,20 @@ export default new Vuex.Store({
     updatePrice({commit}, price) {commit('UPDATE_PRICE', price)},
     updateCode({commit}, code) {commit('UPDATE_CODE', code)},
     updateStock({commit}, stock) {commit('UPDATE_STOCK', stock)},
+    cancelForm({commit}){
+      commit('SET_EMPTY_TOY') 
+      commit('HIDE_TOY_FORM')
+    },
     postToy({dispatch, state}) {
       axios.post('https://us-central1-ottoklauss-b9eea.cloudfunctions.net/toys/toy', state.currentToy.data)
       .then(() => {
-        
         dispatch('setToys')
       })
     },
     deleteProduct({dispatch}, id){
       axios.delete(`https://us-central1-ottoklauss-b9eea.cloudfunctions.net/toys/toy/${id}`)
       .then(() => {
-        
-        dispatch('setToys')
+         dispatch('setToys')
       })
     },
     setCurrentToy({commit}, id){
